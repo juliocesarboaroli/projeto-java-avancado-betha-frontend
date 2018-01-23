@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default class FormController {
 
     constructor($stateParams, $state, ConvocacaoService, Notification, GoleiroService) {
@@ -11,6 +13,8 @@ export default class FormController {
             this._service.findById($stateParams.id)
                 .then(data => {
                     this.record = data
+                    console.log('dataHora',data)
+                    this.record.dataHora = moment(data.dataHora, 'YYYY-MM-DD HH:mm ZZ').toDate()
                 })
         }
         this._state = $state
@@ -28,6 +32,7 @@ export default class FormController {
     }
 
     save() {
+        this.record.dataHora = moment(this.record.dataHora).format('YYYY-MM-DDTHH:mm:ss')
         this._service.save(this.record)
             .then(resp => {
                 this._notify.success('Registro salvo com sucesso!')
